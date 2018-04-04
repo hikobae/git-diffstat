@@ -37,9 +37,9 @@ func maxLen(max int, results []result, f func(result) string) int {
 }
 
 const usageMessage = "" +
-`Usage of 'git-stat':
+`Usage of 'git-loc':
 
-> git-stat HEAD^
+> git-loc HEAD^
 path       add  delete
 ----------------------
 README.md   14       0

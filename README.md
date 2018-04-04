@@ -1,9 +1,9 @@
-# git-stat
+# git-diffstat
 
-`git-stat` is a tool to format the output of `git diff --numstat`.
+`git-diffstat` is a tool to format the output of `git diff --numstat`.
 
 ```console
-> git-stat HEAD^
+> git-diffstat HEAD^
 path       add  delete
 ----------------------
 README.md   14       0
