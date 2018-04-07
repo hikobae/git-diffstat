@@ -56,12 +56,12 @@ func main() {
 	flag.Usage = usage
 	flag.Parse()
 
-	if flag.NArg() == 0 {
-		flag.Usage()
-	}
-
 	git := new(Git)
-	lines, err := git.Diff("--numstat", os.Args[1])
+
+	args := []string{"--numstat"}
+	args = append(args, flag.Args()...)
+
+	lines, err := git.Diff(args...)
 	if err != nil {
 		log.Fatalln(err)
 	}
