@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -66,14 +67,15 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	re := regexp.MustCompile(`^(\d+)\s+(\d+)\s+(.*)$`)
 	results := make([]result, len(lines))
 	for i, line := range lines {
-		s := strings.Fields(line)
-		if len(s) != 3 {
+		s := re.FindStringSubmatch(line)
+		if len(s) != 4 {
 			log.Fatalf("The number of fields is not 3, actual=%d", len(s))
 		}
 
-		results[i].add, results[i].delete, results[i].path = s[0], s[1], s[2]
+		results[i].add, results[i].delete, results[i].path = s[1], s[2], s[3]
 	}
 
 	width := struct {
