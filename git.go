@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -14,6 +15,7 @@ func (g *Git) Diff(args ...string) ([]string, error) {
 func (g *Git) run(command string, args ...string) ([]string, error) {
 	xargs := append([]string{command}, args...)
 	cmd := exec.Command("git", xargs...)
+	cmd.Stderr = os.Stderr
 	out, err := cmd.Output()
 	if err != nil {
 		return nil, err
