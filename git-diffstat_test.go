@@ -7,6 +7,7 @@ var parseLineTest = []struct {
 	result result
 }{
 	{"25      17      git-diffstat.go", result{path: "git-diffstat.go", add: "25", delete: "17"}},
+	{"-       -       a.png", result{path: "a.png", add: "-", delete: "-"}},
 }
 
 func TestParseLine(t *testing.T) {

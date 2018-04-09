@@ -27,7 +27,7 @@ type result struct {
 	delete string
 }
 
-var lineRegexp = regexp.MustCompile(`^(\d+)\s+(\d+)\s+(.*)$`)
+var lineRegexp = regexp.MustCompile(`^([-\w]+)\s+([-\w]+)\s+(.*)$`)
 
 func parseLine(line string, r *result) error {
 	s := lineRegexp.FindStringSubmatch(line)
