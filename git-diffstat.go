@@ -10,9 +10,9 @@ import (
 )
 
 var title = struct {
-	add string
+	add    string
 	delete string
-	path string
+	path   string
 }{
 	"add",
 	"delete",
@@ -22,9 +22,21 @@ var title = struct {
 const spaces string = "  "
 
 type result struct {
-	path string
-	add string
+	path   string
+	add    string
 	delete string
+}
+
+var lineRegexp = regexp.MustCompile(`^(\d+)\s+(\d+)\s+(.*)$`)
+
+func parseLine(line string, r *result) error {
+	s := lineRegexp.FindStringSubmatch(line)
+	if len(s) != 4 {
+		return fmt.Errorf("The number of fields is not 3, actual=%d", len(s))
+	}
+
+	r.add, r.delete, r.path = s[1], s[2], s[3]
+	return nil
 }
 
 func maxLen(max int, results []result, f func(result) string) int {
@@ -38,7 +50,7 @@ func maxLen(max int, results []result, f func(result) string) int {
 }
 
 const usageMessage = "" +
-`Usage of 'git-loc':
+	`Usage of 'git-loc':
 
 > git-loc HEAD^
 path       add  delete
@@ -67,25 +79,21 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	re := regexp.MustCompile(`^(\d+)\s+(\d+)\s+(.*)$`)
 	results := make([]result, len(lines))
 	for i, line := range lines {
-		s := re.FindStringSubmatch(line)
-		if len(s) != 4 {
-			log.Fatalf("The number of fields is not 3, actual=%d", len(s))
+		if err := parseLine(line, &results[i]); err != nil {
+			log.Fatal(err)
 		}
-
-		results[i].add, results[i].delete, results[i].path = s[1], s[2], s[3]
 	}
 
 	width := struct {
-		add int
+		add    int
 		delete int
-		path int
+		path   int
 	}{
-		maxLen(len(title.add), results, func(r result) string {return r.add}),
-		maxLen(len(title.delete), results, func(r result) string {return r.delete}),
-		maxLen(len(title.path), results, func(r result) string {return r.path}),
+		maxLen(len(title.add), results, func(r result) string { return r.add }),
+		maxLen(len(title.delete), results, func(r result) string { return r.delete }),
+		maxLen(len(title.path), results, func(r result) string { return r.path }),
 	}
 
 	fmt.Printf("%-[4]*[1]s%[7]s%[5]*[2]s%[7]s%[6]*[3]s\n", title.path, title.add, title.delete, width.path, width.add, width.delete, spaces)
