@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -49,19 +50,16 @@ func maxLen(max int, results []result, f func(result) string) int {
 	return max
 }
 
-const usageMessage = "" +
-	`Usage of 'git-loc':
-
-> git-loc HEAD^
-path       add  delete
-----------------------
-README.md   14       0
-`
-
 func usage() {
-	fmt.Fprintln(os.Stderr, usageMessage)
-	fmt.Fprintln(os.Stderr, "Flags:")
-	flag.PrintDefaults()
+	cmd := filepath.Base(os.Args[0])
+	fmt.Fprintf(os.Stderr, "Usage: %s [<commit>]\n", cmd)
+	fmt.Fprintf(os.Stderr, `
+Example:
+  > %s HEAD^
+  path       add  delete
+  ----------------------
+  README.md   14       0
+`, cmd)
 	os.Exit(2)
 }
 
